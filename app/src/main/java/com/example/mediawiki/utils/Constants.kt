@@ -1,10 +1,5 @@
 package com.example.mediawiki
 
-import com.example.mediawiki.Constants.API_URL
-import com.example.mediawiki.datasource.RemoteDataSource
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
 object Constants {
 
     const val API_URL = "https://en.wikipedia.org/w/"

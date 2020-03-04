@@ -3,7 +3,6 @@ package com.example.mediawiki
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.example.mediawiki.datasource.RemoteDataSource
-import kotlinx.android.synthetic.main.list_item.view.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
