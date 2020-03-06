@@ -1,31 +1,40 @@
 package com.example.mediawiki.repo
 
-import com.example.mediawiki.Constants
-import com.example.mediawiki.Utility
-import com.example.mediawiki.datasource.RemoteDataSource
-import com.example.mediawiki.model.DataModel
-import com.example.mediawiki.model.ResponseModel
+import com.example.mediawiki.utils.Utility
+import com.example.mediawiki.model.FeaturedResponseModel
+import com.example.mediawiki.model.QueryModel
+import com.example.mediawiki.utils.Utility.getFormattedInt
 import com.google.gson.Gson
-import kotlinx.coroutines.*
-import retrofit2.Retrofit
-import kotlin.coroutines.CoroutineContext
+import java.util.*
+import java.util.Calendar.*
 
 
 class Repository {
 
-    fun fetchData(isOnline: Boolean = true): List<DataModel>? {
+    fun fetchData(isOnline: Boolean = true): FeaturedResponseModel? {
 
-        var data: List<DataModel>? = null
         if (isOnline) {
 
             val service = Utility.getApiService()
-            val call = service.fetchData()
-            val responseModel = Gson().fromJson(call?.execute()?.body(), ResponseModel::class.java)
-            data = responseModel.query.pages
+
+            val calendar = getInstance()
+            val year = getFormattedInt(calendar.get(YEAR))
+            val month = getFormattedInt(calendar.get(MONTH))
+            val day = getFormattedInt(calendar.get(DAY_OF_MONTH))
+            val call = service.fetchData(year, month, day)
+            val response = call?.execute()
+            if (response?.isSuccessful == true) {
+                val jsonResponse = response.body()
+                return Gson().fromJson(jsonResponse, FeaturedResponseModel::class.java)
+            }
+            else
+            {
+                //TODO Error handling
+            }
         } else {
-            //TODO (not implemented)FetchFromDB
+            //TODO FetchFromDB
         }
 
-        return data
+        return null
     }
 }

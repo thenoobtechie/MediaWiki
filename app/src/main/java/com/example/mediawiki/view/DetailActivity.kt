@@ -2,6 +2,7 @@ package com.example.mediawiki.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.mediawiki.R
 
 class DetailActivity : AppCompatActivity() {
 

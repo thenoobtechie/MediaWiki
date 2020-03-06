@@ -1,21 +1,38 @@
-package com.example.mediawiki
+package com.example.mediawiki.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mediawiki.R
 import com.example.mediawiki.model.DataModel
+import com.example.mediawiki.utils.Utility
+import com.example.mediawiki.model.QueryModel
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class DataListAdapter(var list: List<DataModel>) :
+class DataListAdapter(var list: List<DataModel>, var itemClickListener: ListItemClick) :
     RecyclerView.Adapter<DataListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    interface ListItemClick {
+
+        fun onListItemClick(dataModel: DataModel)
+    }
+
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(dataModel: DataModel) {
-            itemView.title_txt.text = dataModel.title
-            dataModel.terms?.let { itemView.desc_txt.text = it.description[0] }
-            dataModel.thumb?.let { Utility.loadImage(it.url, itemView.thumb) }
+            itemView.title_txt.text = dataModel.displayTitle
+            itemView.desc_txt.text = dataModel.description
+            dataModel.thumb?.let {
+                Utility.loadImage(
+                    it.url,
+                    itemView.thumb
+                )
+            }
+
+            itemView.setOnClickListener {
+                itemClickListener.onListItemClick(dataModel)
+            }
         }
     }
 
