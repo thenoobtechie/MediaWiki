@@ -15,11 +15,50 @@
  */
 package com.example.mediawiki.utils
 
+import androidx.room.TypeConverter
+import com.example.mediawiki.model.ContentUrls
+import com.example.mediawiki.model.MobileUrls
+import com.example.mediawiki.model.Thumbnail
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
+
+
 /**
  * Type converters to allow Room to reference complex data types.
  */
-internal class Converters { /*@TypeConverter fun calendarToDatestamp(calendar: Calendar): Long = calendar.timeInMillis
+class Converters {
 
-    @TypeConverter fun datestampToCalendar(value: Long): Calendar =
-            Calendar.getInstance().apply { timeInMillis = value }*/
+    @TypeConverter fun stringToContentUrlsObj(string: String?): ContentUrls? {
+        if (string == null) {
+            return null
+        }
+        val gson = Gson()
+        val type: Type = object : TypeToken<ContentUrls?>() {}.type
+        return gson.fromJson(string, type)
+    }
+
+    @TypeConverter fun contentUrlsToString(contentUrls: ContentUrls?): String = Gson().toJson(contentUrls)
+
+    @TypeConverter fun stringToMobileUrlsObj(string: String?): MobileUrls? {
+        if (string == null) {
+            return null
+        }
+        val gson = Gson()
+        val type: Type = object : TypeToken<MobileUrls?>() {}.type
+        return gson.fromJson(string, type)
+    }
+
+    @TypeConverter fun mobileUrlsToString(mobileUrls: MobileUrls?): String = Gson().toJson(mobileUrls)
+
+    @TypeConverter fun stringToThumbnailObj(string: String?): Thumbnail? {
+        if (string == null) {
+            return null
+        }
+        val gson = Gson()
+        val type: Type = object : TypeToken<Thumbnail?>() {}.type
+        return gson.fromJson(string, type)
+    }
+
+    @TypeConverter fun thumbnailToString(thumbnail: Thumbnail?): String = Gson().toJson(thumbnail)
 }

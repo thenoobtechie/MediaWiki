@@ -9,9 +9,14 @@ import com.example.mediawiki.model.DataModel
 import com.example.mediawiki.utils.Utility
 import com.example.mediawiki.model.QueryModel
 import kotlinx.android.synthetic.main.list_item.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
-class DataListAdapter(var list: List<DataModel>, var itemClickListener: ListItemClick) :
+class DataListAdapter(var itemClickListener: ListItemClick) :
     RecyclerView.Adapter<DataListAdapter.ViewHolder>() {
+
+    var list = listOf<DataModel>()
+    var displayList = ArrayList<DataModel>()
 
     interface ListItemClick {
 
@@ -47,13 +52,36 @@ class DataListAdapter(var list: List<DataModel>, var itemClickListener: ListItem
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(displayList[position])
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = displayList.size
 
     fun update(list: List<DataModel>) {
         this.list = list
+        resetList()
+    }
+
+    fun filter(qry: String) {
+
+        if (qry.isBlank())
+            resetList()
+        else {
+
+            displayList.clear()
+            this.list.forEach {
+                if (it.title.toLowerCase(Locale.getDefault()).contains(qry.toLowerCase(Locale.getDefault()))) {
+                    displayList.add(it)
+                }
+            }
+            notifyDataSetChanged()
+        }
+    }
+
+    private fun resetList() {
+        this.list.forEach {
+            displayList.add(it)
+        }
         notifyDataSetChanged()
     }
 }

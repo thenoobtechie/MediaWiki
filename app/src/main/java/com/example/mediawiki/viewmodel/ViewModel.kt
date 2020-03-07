@@ -1,35 +1,15 @@
 package com.example.mediawiki.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.mediawiki.model.MostReadResponseModel
-import com.example.mediawiki.model.QueryModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.mediawiki.repo.Repository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
-class ViewModel: ViewModel(), CoroutineScope {
+class ViewModel(var repository: Repository): ViewModelProvider.NewInstanceFactory() {
 
-    override val coroutineContext: CoroutineContext
-        get() = Job() + Dispatchers.IO
-
-    val mostReadArticles: MutableLiveData<MostReadResponseModel> by lazy {
-        MutableLiveData<MostReadResponseModel>().also {
-            fetchData()
-        }
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return ViewModel(repository) as T
     }
 
-    private fun fetchData(/*isOnline: Boolean, callback: Callback<ResponseModel>*/) {
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = Repository().fetchData()
-            if (response != null) {
-                mostReadArticles.postValue(response.mostRead)
-            }
-        }
-    }
+    val mostReadArticles = repository.queryLive()
 }
